@@ -1,17 +1,11 @@
 // ===== EMAIL CONFIGURATIE =====
-// Stap 1: Maak een gratis account op https://www.emailjs.com
-// Stap 2: Maak een Email Service aan (bijv. Gmail) en noteer de Service ID
-// Stap 3: Maak een Email Template aan en noteer de Template ID
-// Stap 4: Kopieer uw Public Key uit Account > API Keys
-// Vul de drie waarden hieronder in:
-
 const EMAIL_CONFIG = {
   publicKey:  'AjC1aOiOrUoy_0r-k',
   serviceId:  'service_d5o9cir',
   templateId: 'template_uyc8vio'
 };
 
-// EmailJS variabelen in uw template (kopieer deze namen precies):
+// EmailJS variabelen in uw template:
 // {{onderwerp}}  — Rijbewijs of Auto inbeslagname
 // {{naam}}       — Naam van de aanvrager
 // {{telefoon}}   — Telefoonnummer
@@ -20,89 +14,35 @@ const EMAIL_CONFIG = {
 // {{antwoorden}} — Samenvatting van de antwoorden
 
 // ===== VRAGENLIJSTEN =====
-// Pas hier de vragen en antwoordopties aan naar wens.
-
 const TRIAGE_FLOWS = {
   rijbewijs: {
     label: '🪪 Rijbewijs Inbeslagname',
     intro: 'Ik ga u een aantal korte vragen stellen om uw situatie goed in kaart te brengen. Dit helpt ons u direct de juiste juridische hulp te bieden.',
     questions: [
-      {
-        id: 'timing',
-        text: 'Wanneer is uw rijbewijs in beslag genomen?',
-        options: ['Vandaag', 'Afgelopen week', 'Meer dan een week geleden']
-      },
-      {
-        id: 'reason',
-        text: 'Wat was de aanleiding voor de inbeslagname?',
-        options: [
-          'Rijden onder invloed (alcohol of drugs)',
-          'Te hoge snelheid / gevaarlijk rijgedrag',
-          'Medische ongeschiktheid (CBR)',
-          'Anders of onbekend'
-        ]
-      },
-      {
-        id: 'document',
-        text: 'Heeft u een officieel vorderingsbesluit of schriftelijk besluit ontvangen?',
-        options: ['Ja, ik heb het besluit', 'Nee, nog niet ontvangen', 'Ik weet het niet']
-      },
-      {
-        id: 'history',
-        text: 'Is dit de eerste keer dat uw rijbewijs wordt ingevorderd?',
-        options: ['Ja, dit is de eerste keer', 'Nee, dit is eerder ook gebeurd']
-      },
+      { id: 'timing', text: 'Wanneer is uw rijbewijs in beslag genomen?', options: ['Vandaag', 'Afgelopen week', 'Meer dan een week geleden'] },
+      { id: 'reason', text: 'Wat was de aanleiding voor de inbeslagname?', options: ['Rijden onder invloed (alcohol of drugs)', 'Te hoge snelheid / gevaarlijk rijgedrag', 'Medische ongeschiktheid (CBR)', 'Anders of onbekend'] },
+      { id: 'document', text: 'Heeft u een officieel vorderingsbesluit of schriftelijk besluit ontvangen?', options: ['Ja, ik heb het besluit', 'Nee, nog niet ontvangen', 'Ik weet het niet'] },
+      { id: 'history', text: 'Is dit de eerste keer dat uw rijbewijs wordt ingevorderd?', options: ['Ja, dit is de eerste keer', 'Nee, dit is eerder ook gebeurd'] },
     ]
   },
-
   auto: {
     label: '🚗 Auto Inbeslagname',
     intro: 'Ik ga u een aantal korte vragen stellen om uw situatie goed in kaart te brengen. Dit helpt ons u direct de juiste juridische hulp te bieden.',
     questions: [
-      {
-        id: 'timing',
-        text: 'Wanneer is uw auto in beslag genomen?',
-        options: ['Vandaag', 'Afgelopen week', 'Meer dan een week geleden']
-      },
-      {
-        id: 'authority',
-        text: 'Door welke instantie is uw auto in beslag genomen?',
-        options: [
-          'Politie (strafrecht of verkeersovertreding)',
-          'Belastingdienst of CJIB',
-          'Deurwaarder (schulden)',
-          'Andere instantie of onbekend'
-        ]
-      },
-      {
-        id: 'document',
-        text: 'Heeft u een officieel inbeslagnamebesluit of procesverbaal ontvangen?',
-        options: ['Ja', 'Nee', 'Ik weet het niet']
-      },
-      {
-        id: 'criminal',
-        text: 'Is de inbeslagname gerelateerd aan een strafrechtelijk onderzoek?',
-        options: ['Ja', 'Nee', 'Ik weet het niet']
-      },
+      { id: 'timing', text: 'Wanneer is uw auto in beslag genomen?', options: ['Vandaag', 'Afgelopen week', 'Meer dan een week geleden'] },
+      { id: 'authority', text: 'Door welke instantie is uw auto in beslag genomen?', options: ['Politie (strafrecht of verkeersovertreding)', 'Belastingdienst of CJIB', 'Deurwaarder (schulden)', 'Andere instantie of onbekend'] },
+      { id: 'document', text: 'Heeft u een officieel inbeslagnamebesluit of procesverbaal ontvangen?', options: ['Ja', 'Nee', 'Ik weet het niet'] },
+      { id: 'criminal', text: 'Is de inbeslagname gerelateerd aan een strafrechtelijk onderzoek?', options: ['Ja', 'Nee', 'Ik weet het niet'] },
     ]
   }
 };
 
-// ===== BEVEILIGING: inputsanering =====
+// ===== BEVEILIGING =====
 function sanitize(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .trim();
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;').trim();
 }
-
-// ===== BEVEILIGING: rate limiting (max 3 aanvragen per sessie) =====
 function checkRateLimit() {
-  const key   = 'sr_submissions';
-  const limit = 3;
+  const key = 'sr_submissions', limit = 3;
   const count = parseInt(sessionStorage.getItem(key) || '0');
   if (count >= limit) return false;
   sessionStorage.setItem(key, count + 1);
@@ -111,16 +51,12 @@ function checkRateLimit() {
 
 // ===== HAMBURGER MENU =====
 function toggleMenu() {
-  const links = document.getElementById('nav-links');
-  const btn   = document.getElementById('nav-hamburger');
-  links.classList.toggle('open');
-  btn.classList.toggle('open');
+  document.getElementById('nav-links').classList.toggle('open');
+  document.getElementById('nav-hamburger').classList.toggle('open');
 }
-
-// Sluit menu bij klik buiten de navbar
 document.addEventListener('click', function(e) {
   const links = document.getElementById('nav-links');
-  const btn   = document.getElementById('nav-hamburger');
+  const btn = document.getElementById('nav-hamburger');
   if (links && !links.contains(e.target) && btn && !btn.contains(e.target)) {
     links.classList.remove('open');
     btn.classList.remove('open');
@@ -130,16 +66,13 @@ document.addEventListener('click', function(e) {
 // ===== COOKIE CONSENT =====
 (function () {
   const consent = localStorage.getItem('cookie-consent');
-  const banner  = document.getElementById('cookie-banner');
+  const banner = document.getElementById('cookie-banner');
   if (consent) banner.classList.add('hidden');
 })();
-
 function acceptCookies() {
   localStorage.setItem('cookie-consent', 'accepted');
   document.getElementById('cookie-banner').classList.add('hidden');
-  // Plaats hier uw Google Analytics initialisatie als u die gebruikt
 }
-
 function declineCookies() {
   localStorage.setItem('cookie-consent', 'declined');
   document.getElementById('cookie-banner').classList.add('hidden');
@@ -148,14 +81,8 @@ function declineCookies() {
 // ===== INITIALISATIE =====
 emailjs.init(EMAIL_CONFIG.publicKey);
 
-let state = {
-  topic: null,
-  questionIndex: 0,
-  answers: {},
-  phase: 'idle'
-};
+let state = { topic: null, questionIndex: 0, answers: {}, phase: 'idle' };
 
-// ===== DOM REFERENTIES =====
 const chatSection  = document.getElementById('chat-section');
 const chatBody     = document.getElementById('chat-body');
 const chatProgress = document.getElementById('chat-progress');
@@ -167,18 +94,13 @@ function scrollBottom() {
   setTimeout(() => chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' }), 60);
 }
 
-// ===== BOT BERICHT =====
 function addBotMsg(text, delayMs = 900) {
   return new Promise(resolve => {
     const typing = document.createElement('div');
     typing.className = 'msg msg-bot typing-bubble';
-    typing.innerHTML = `
-      <div class="msg-avatar">⚖</div>
-      <div class="typing-dots"><span></span><span></span><span></span></div>
-    `;
+    typing.innerHTML = `<div class="msg-avatar">⚖</div><div class="typing-dots"><span></span><span></span><span></span></div>`;
     chatBody.appendChild(typing);
     scrollBottom();
-
     setTimeout(() => {
       typing.remove();
       const el = document.createElement('div');
@@ -191,7 +113,6 @@ function addBotMsg(text, delayMs = 900) {
   });
 }
 
-// ===== GEBRUIKER BERICHT =====
 function addUserMsg(text) {
   const el = document.createElement('div');
   el.className = 'msg msg-user';
@@ -200,7 +121,6 @@ function addUserMsg(text) {
   scrollBottom();
 }
 
-// ===== ANTWOORDKNOPPEN =====
 function showOptions(options, onSelect) {
   const wrap = document.createElement('div');
   wrap.className = 'options-wrap';
@@ -215,42 +135,30 @@ function showOptions(options, onSelect) {
   scrollBottom();
 }
 
-// ===== VOORTGANG =====
 function updateProgress(current, total) {
   progressFill.style.width = (current / total * 100) + '%';
   progressLabel.textContent = current < total ? `Stap ${current} van ${total}` : 'Bijna klaar…';
 }
 
-// ===== TRIAGE STARTEN =====
 function startTriage(topic) {
   state = { topic, questionIndex: 0, answers: {}, phase: 'triage' };
-
   const flow = TRIAGE_FLOWS[topic];
   chatBadge.textContent = flow.label;
   chatBadge.style.display = 'flex';
   chatProgress.style.display = 'flex';
   updateProgress(0, flow.questions.length);
   chatBody.innerHTML = '';
-
-  // Chat sectie zichtbaar maken en ernaar scrollen
   chatSection.style.display = 'block';
-  setTimeout(() => {
-    chatSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 80);
-
+  setTimeout(() => chatSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
   setTimeout(async () => {
     await addBotMsg(flow.intro, 700);
     await askQuestion(0);
   }, 500);
 }
 
-// ===== VRAAG STELLEN =====
 async function askQuestion(index) {
   const flow = TRIAGE_FLOWS[state.topic];
-  if (index >= flow.questions.length) {
-    await showContactForm();
-    return;
-  }
+  if (index >= flow.questions.length) { await showContactForm(); return; }
   const q = flow.questions[index];
   updateProgress(index + 1, flow.questions.length);
   await addBotMsg(q.text);
@@ -261,14 +169,11 @@ async function askQuestion(index) {
   });
 }
 
-// ===== CONTACTFORMULIER =====
 async function showContactForm() {
   updateProgress(TRIAGE_FLOWS[state.topic].questions.length, TRIAGE_FLOWS[state.topic].questions.length);
   state.phase = 'contact';
-
   await addBotMsg('Bedankt voor uw antwoorden! Op basis hiervan kunnen wij u direct koppelen aan een gespecialiseerde advocaat. Vul hieronder uw contactgegevens in om een gratis consult in te plannen.');
   await new Promise(r => setTimeout(r, 300));
-
   const wrap = document.createElement('div');
   wrap.className = 'msg msg-bot contact-form-wrap';
   wrap.innerHTML = `
@@ -277,7 +182,6 @@ async function showContactForm() {
       <h3>Uw contactgegevens</h3>
       <p>Wij nemen binnen 24 uur contact met u op voor een gratis intake.</p>
       <form id="contact-form" class="form-row" novalidate>
-        <!-- Honeypot: verborgen voor mensen, bots vullen dit in -->
         <input id="cf-honeypot" name="website" type="text" style="display:none;" tabindex="-1" autocomplete="off" />
         <div class="form-field">
           <label for="cf-name">Volledige naam *</label>
@@ -309,59 +213,34 @@ async function showContactForm() {
   document.getElementById('contact-form').addEventListener('submit', handleContactSubmit);
 }
 
-// ===== FORMULIER VERZENDEN =====
 async function handleContactSubmit(e) {
   e.preventDefault();
-
-  // Honeypot check — bots vullen dit veld in, mensen niet
   if (document.getElementById('cf-honeypot').value) return;
-
-  // Rate limiting
   if (!checkRateLimit()) {
     alert('U heeft het maximale aantal aanvragen bereikt. Bel ons direct: 06 82 75 67 89.');
     return;
   }
-
   const name  = sanitize(document.getElementById('cf-name').value);
   const phone = sanitize(document.getElementById('cf-phone').value);
   const email = sanitize(document.getElementById('cf-email').value);
   const time  = sanitize(document.getElementById('cf-time').value);
-
-  // Validatie
   let valid = true;
   ['cf-name', 'cf-phone', 'cf-email'].forEach(id => {
     const el = document.getElementById(id);
     if (!el.value.trim()) { el.style.borderColor = '#e63946'; valid = false; }
     else el.style.borderColor = '';
   });
-
-  // E-mailadres basisvalidatie
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     document.getElementById('cf-email').style.borderColor = '#e63946';
     valid = false;
   }
-
   if (!valid) return;
-
   const btn = document.getElementById('submit-btn');
   btn.textContent = 'Verzenden…';
   btn.disabled = true;
-
-  // Bouw samenvatting van antwoorden
   const flow = TRIAGE_FLOWS[state.topic];
-  const antwoorden = flow.questions
-    .map(q => `${q.text}\n→ ${state.answers[q.id] || '—'}`)
-    .join('\n\n');
-
-  const templateParams = {
-    onderwerp:   flow.label,
-    naam:        name,
-    telefoon:    phone,
-    email:       email,
-    contacttijd: time,
-    antwoorden:  antwoorden
-  };
-
+  const antwoorden = flow.questions.map(q => `${q.text}\n→ ${state.answers[q.id] || '—'}`).join('\n\n');
+  const templateParams = { onderwerp: flow.label, naam: name, telefoon: phone, email, contacttijd: time, antwoorden };
   try {
     await emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, templateParams);
     e.target.closest('.contact-form-wrap').remove();
@@ -371,20 +250,12 @@ async function handleContactSubmit(e) {
     console.error('EmailJS fout:', err);
     btn.textContent = 'Probeer opnieuw';
     btn.disabled = false;
-    // Fallback: toon succes ook zonder email (handig tijdens ontwikkeling)
-    if (EMAIL_CONFIG.publicKey === 'UW_PUBLIC_KEY') {
-      e.target.closest('.contact-form-wrap').remove();
-      addUserMsg(`${name} — ${phone} — ${email}`);
-      setTimeout(() => showSuccess(name), 400);
-    }
   }
-
   state.phase = 'done';
   chatProgress.style.display = 'none';
   chatBadge.style.display = 'none';
 }
 
-// ===== SUCCESBERICHT =====
 async function showSuccess(name) {
   const el = document.createElement('div');
   el.className = 'msg msg-bot';
@@ -393,7 +264,7 @@ async function showSuccess(name) {
     <div class="success-bubble">
       <div class="success-icon">✅</div>
       <h3>Aanvraag ontvangen, ${name.split(' ')[0]}!</h3>
-      <p>Wij nemen binnen <strong>24 uur</strong> contact met u op voor een gratis intake. In spoedsituaties kunt u ons altijd direct bereiken via <strong>06 82 75 67 89</strong>.</p>
+      <p>Wij nemen binnen <strong>24 uur</strong> contact met u op voor een gratis intake. In spoedsituaties kunt u ons altijd direct bereiken via WhatsApp.</p>
     </div>
   `;
   chatBody.appendChild(el);
