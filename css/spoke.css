@@ -123,7 +123,7 @@
 
 @media (max-width: 860px) {
   .spoke-layout { grid-template-columns: 1fr; }
-  .spoke-sidebar { order: -1; position: static; }
+  .spoke-sidebar { position: static; }
 }
 
 @media (max-width: 480px) {
