@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Juridische Artikelen & Kennisbank | SpoedRechtshulp Advocaten</title>
+  <meta name="description" content="Lees onze juridische artikelen over rijbewijs inbeslagname, auto inbeslagname en uw rechten. Praktische informatie van SpoedRechtshulp Advocaten." />
+  <meta name="keywords" content="juridische artikelen rijbewijs, auto inbeslagname informatie, advocaat kennisbank, rijbewijs rechten, vorderingsbesluit uitleg" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.spoedrechtshulp.nl/artikelen.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.spoedrechtshulp.nl/artikelen.html" />
+  <meta property="og:title" content="Juridische Artikelen & Kennisbank | SpoedRechtshulp" />
+  <meta property="og:description" content="Praktische juridische informatie over rijbewijs en auto inbeslagname." />
+  <meta property="og:site_name" content="SpoedRechtshulp" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Juridische Artikelen & Kennisbank",
+    "description": "Overzicht van alle juridische artikelen van SpoedRechtshulp Advocaten over rijbewijs- en auto-inbeslagname.",
+    "url": "https://www.spoedrechtshulp.nl/artikelen.html",
+    "publisher": { "@type": "Organization", "name": "SpoedRechtshulp Advocaten", "url": "https://www.spoedrechtshulp.nl" }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/spoke.css" />
+
+  <style>
+    .artikelen-hero {
+      padding-top: 64px;
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+    .artikelen-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(155,27,48,.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .artikelen-hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 100px;
+      background: linear-gradient(to bottom, transparent, var(--warm-bg));
+      pointer-events: none;
+    }
+    .artikelen-hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 52px 32px 100px;
+    }
+    .artikelen-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 56px 32px 80px;
+      background: var(--warm-bg);
+      position: relative;
+      z-index: 2;
+    }
+    .artikelen-sectie-titel {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--mid);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin: 0 0 20px;
+    }
+    .artikelen-lijst {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+    .artikel-kaart {
+      background: var(--white);
+      border: 1.5px solid var(--warm-border);
+      border-radius: 10px;
+      padding: 24px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .artikel-kaart::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--crimson);
+      transform: scaleX(0);
+      transition: transform .2s;
+    }
+    .artikel-kaart:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+    .artikel-kaart:hover::after { transform: scaleX(1); }
+    .artikel-tag {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--crimson);
+    }
+    .artikel-titel {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--black);
+      line-height: 1.35;
+    }
+    .artikel-omschrijving {
+      font-size: .85rem;
+      color: var(--mid);
+      line-height: 1.6;
+    }
+    .artikel-lees-meer {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--crimson);
+      margin-top: auto;
+    }
+    @media (max-width: 480px) {
+      .artikelen-hero-inner { padding: 36px 20px 80px; }
+      .artikelen-grid { padding: 36px 20px 60px; }
+      .artikelen-lijst { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">SR</span>
+        <span class="logo-text">Spoed<span class="logo-accent">Rechtshulp</span></span>
+      </a>
+      <nav class="nav-links" id="nav-links">
+        <a href="rijbewijs-inbeslagname.html" class="nav-link">Rijbewijs Inbeslagname</a>
+        <a href="auto-inbeslagname.html" class="nav-link">Auto Inbeslagname</a>
+        <a href="artikelen.html" class="nav-link" style="color:var(--white);">Artikelen</a>
+      </nav>
+      <div class="nav-right">
+        <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu" onclick="toggleMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="artikelen-hero">
+    <div class="artikelen-hero-inner">
+      <div class="spoke-breadcrumb">
+        <a href="index.html">Home</a>
+        <span>›</span>
+        <span>Artikelen</span>
+      </div>
+      <h1 class="spoke-title">Juridische <em>Kennisbank</em></h1>
+      <p class="spoke-sub">Praktische informatie over rijbewijs inbeslagname, auto inbeslagname en uw rechten. Maandelijks bijgewerkt door onze advocaten.</p>
+    </div>
+  </div>
+
+  <!-- ARTIKELEN GRID -->
+  <div class="artikelen-grid">
+
+    <p class="artikelen-sectie-titel">Rijbewijs</p>
+    <div class="artikelen-lijst" id="rijbewijs-artikelen">
+
+      <a href="rijbewijs-inbeslagname.html" class="artikel-kaart">
+        <span class="artikel-tag">Rijbewijs</span>
+        <span class="artikel-titel">Rijbewijs Inbeslagname — Wat Nu?</span>
+        <span class="artikel-omschrijving">Uw rechten na strafrechtelijke inbeslagname door de politie. Procedure, termijnen en hoe u bezwaar maakt.</span>
+        <span class="artikel-lees-meer">Lees meer →</span>
+      </a>
+
+      <a href="vorderingsbesluit.html" class="artikel-kaart">
+        <span class="artikel-tag">Rijbewijs</span>
+        <span class="artikel-titel">Vorderingsbesluit — Wat Betekent Het?</span>
+        <span class="artikel-omschrijving">Uitleg over het vorderingsbesluit van het OM en hoe u een verzoekschrift indient.</span>
+        <span class="artikel-lees-meer">Lees meer →</span>
+      </a>
+
+      <a href="rijden-onder-invloed-rijbewijs.html" class="artikel-kaart">
+        <span class="artikel-tag">Rijbewijs</span>
+        <span class="artikel-titel">Rijbewijs Kwijt na Alcohol of Drugs?</span>
+        <span class="artikel-omschrijving">Promillage grenzen, gevolgen voor uw rijbewijs en wat een advocaat voor u kan doen.</span>
+        <span class="artikel-lees-meer">Lees meer →</span>
+      </a>
+
+      <a href="klaagschrift-indienen.html" class="artikel-kaart">
+        <span class="artikel-tag">Rijbewijs</span>
+        <span class="artikel-titel">Klaagschrift Indienen bij Inbeslagname</span>
+        <span class="artikel-omschrijving">Stap-voor-stap uitleg over het indienen van een klaagschrift bij de rechtbank.</span>
+        <span class="artikel-lees-meer">Lees meer →</span>
+      </a>
+
+    </div>
+
+    <p class="artikelen-sectie-titel">Auto</p>
+    <div class="artikelen-lijst" id="auto-artikelen">
+
+      <a href="auto-inbeslagname.html" class="artikel-kaart">
+        <span class="artikel-tag">Auto</span>
+        <span class="artikel-titel">Auto Inbeslagname — Uw Rechten</span>
+        <span class="artikel-omschrijving">Wat te doen als uw auto strafrechtelijk in beslag is genomen door de politie.</span>
+        <span class="artikel-lees-meer">Lees meer →</span>
+      </a>
+
+      <a href="auto-inbeslagname-ontneming.html" class="artikel-kaart">
+        <span class="artikel-tag">Auto</span>
+        <span class="artikel-titel">Auto Inbeslagname bij Ontneming (Art. 94a Sv)</span>
+        <span class="artikel-omschrijving">Conservatoir beslag in het kader van een ontnemingsprocedure en hoe u uw voertuig terugkrijgt.</span>
+        <span class="artikel-lees-meer">Lees meer →</span>
+      </a>
+
+      <a href="deurwaarder-auto-inbeslagname.html" class="artikel-kaart">
+        <span class="artikel-tag">Auto</span>
+        <span class="artikel-titel">Deurwaarder Neemt Auto in Beslag</span>
+        <span class="artikel-omschrijving">Wat zijn uw rechten als een deurwaarder uw auto in beslag neemt wegens schulden?</span>
+        <span class="artikel-lees-meer">Lees meer →</span>
+      </a>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="logo-mark" style="font-size:.85rem;padding:6px 9px;">SR</span>
+        <span class="logo-text" style="font-size:1rem;">Spoed<span class="logo-accent">Rechtshulp</span></span>
+      </div>
+      <div class="footer-credentials">
+        <span>KvK: 88057283</span>
+      </div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacyverklaring</a>
+      </div>
+      <p class="footer-copy">&copy; 2026 SpoedRechtshulp Advocaten — Alle rechten voorbehouden</p>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/31682756789?text=Hallo%2C%20ik%20heb%20een%20juridische%20vraag." class="whatsapp-btn" target="_blank" rel="noopener">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+  </a>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
