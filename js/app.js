@@ -39,7 +39,9 @@ const TRIAGE_FLOWS = {
 
 // ===== BEVEILIGING =====
 function sanitize(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;').trim();
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#x27;').trim();
 }
 function checkRateLimit() {
   const key = 'sr_submissions', limit = 3;
@@ -51,12 +53,14 @@ function checkRateLimit() {
 
 // ===== HAMBURGER MENU =====
 function toggleMenu() {
-  document.getElementById('nav-links').classList.toggle('open');
-  document.getElementById('nav-hamburger').classList.toggle('open');
+  const links = document.getElementById('nav-links');
+  const btn   = document.getElementById('nav-hamburger');
+  links.classList.toggle('open');
+  btn.classList.toggle('open');
 }
 document.addEventListener('click', function(e) {
   const links = document.getElementById('nav-links');
-  const btn = document.getElementById('nav-hamburger');
+  const btn   = document.getElementById('nav-hamburger');
   if (links && !links.contains(e.target) && btn && !btn.contains(e.target)) {
     links.classList.remove('open');
     btn.classList.remove('open');
@@ -66,16 +70,19 @@ document.addEventListener('click', function(e) {
 // ===== COOKIE CONSENT =====
 (function () {
   const consent = localStorage.getItem('cookie-consent');
-  const banner = document.getElementById('cookie-banner');
-  if (consent) banner.classList.add('hidden');
+  const banner  = document.getElementById('cookie-banner');
+  if (consent && banner) banner.classList.add('hidden');
 })();
+
 function acceptCookies() {
   localStorage.setItem('cookie-consent', 'accepted');
-  document.getElementById('cookie-banner').classList.add('hidden');
+  const b = document.getElementById('cookie-banner');
+  if (b) b.classList.add('hidden');
 }
 function declineCookies() {
   localStorage.setItem('cookie-consent', 'declined');
-  document.getElementById('cookie-banner').classList.add('hidden');
+  const b = document.getElementById('cookie-banner');
+  if (b) b.classList.add('hidden');
 }
 
 // ===== INITIALISATIE =====
@@ -91,7 +98,7 @@ const progressLabel= document.getElementById('progress-label');
 const chatBadge    = document.getElementById('chat-topic-badge');
 
 function scrollBottom() {
-  setTimeout(() => chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' }), 60);
+  if (chatBody) setTimeout(() => chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' }), 60);
 }
 
 function addBotMsg(text, delayMs = 900) {
