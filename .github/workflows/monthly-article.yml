@@ -1,0 +1,37 @@
+name: Maandelijks Artikel Genereren
+
+on:
+  schedule:
+    - cron: '7 9 1 * *'  # 1e van de maand om 09:07 UTC
+  workflow_dispatch:      # ook handmatig te starten via GitHub
+
+jobs:
+  generate-article:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install anthropic
+
+      - name: Genereer nieuw artikel
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/generate_article.py
+
+      - name: Commit en push
+        run: |
+          git config user.email "auto@spoedrechtshulp.nl"
+          git config user.name "SpoedRechtshulp Bot"
+          git add -A
+          git diff --staged --quiet || git commit -m "Nieuw artikel: automatisch gegenereerd op $(date +%Y-%m-%d)"
+          git push
