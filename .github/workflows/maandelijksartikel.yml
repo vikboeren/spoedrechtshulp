@@ -1,0 +1,51 @@
+name: Maandelijks juridisch artikel
+
+# Draait op de 1e van elke maand om 06:00 UTC, en kan ook handmatig gestart
+# worden via de "Run workflow"-knop op het Actions-tabblad.
+on:
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  genereer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository ophalen
+        uses: actions/checkout@v4
+
+      - name: Node.js installeren
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Artikel genereren
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/genereer-artikel.mjs
+
+      - name: Pull request openen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Geen wijzigingen — er is geen nieuw artikel gegenereerd."
+            exit 0
+          fi
+          MAAND="$(date +%Y-%m)"
+          BRANCH="artikel/${MAAND}"
+          git config user.name "SpoedRechtshulp Bot"
+          git config user.email "noreply@spoedrechtshulp.nl"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "Nieuw artikel voor ${MAAND}"
+          git push -u origin "$BRANCH"
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "Nieuw artikel — ${MAAND}" \
+            --body "Automatisch gegenereerd juridisch artikel. **Lees het na** en klik op *Merge* om het te publiceren. Sluit de PR om het te verwerpen."
