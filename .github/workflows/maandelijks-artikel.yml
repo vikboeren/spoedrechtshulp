@@ -48,4 +48,5 @@ jobs:
             --base main \
             --head "$BRANCH" \
             --title "Nieuw artikel — ${MAAND}" \
-            --body "Automatisch gegenereerd juridisch artikel. **Lees het na** en klik op *Merge* om het te publiceren. Sluit de PR om het te verwerpen."
+            --body "Automatisch gegenereerd juridisch artikel. **Lees het na** en klik op *Merge* om het te publiceren. Sluit de PR om het te verwerpen." \
+            --assignee vikboeren
