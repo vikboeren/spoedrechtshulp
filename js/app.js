@@ -25,7 +25,7 @@ const EMAIL_CONFIG = {
 const TRIAGE_FLOWS = {
   rijbewijs: {
     label: '🪪 Rijbewijs Inbeslagname',
-    intro: 'Ik ga u een aantal korte vragen stellen om uw situatie goed in kaart te brengen. Dit helpt ons u direct de juiste juridische hulp te bieden.',
+    intro: 'Twee korte vragen, daarna belt een advocaat u terug.',
     questions: [
       {
         id: 'timing',
@@ -42,22 +42,12 @@ const TRIAGE_FLOWS = {
           'Anders of onbekend'
         ]
       },
-      {
-        id: 'document',
-        text: 'Heeft u een officieel vorderingsbesluit of schriftelijk besluit ontvangen?',
-        options: ['Ja, ik heb het besluit', 'Nee, nog niet ontvangen', 'Ik weet het niet']
-      },
-      {
-        id: 'history',
-        text: 'Is dit de eerste keer dat uw rijbewijs wordt ingevorderd?',
-        options: ['Ja, dit is de eerste keer', 'Nee, dit is eerder ook gebeurd']
-      },
     ]
   },
 
   auto: {
     label: '🚗 Auto Inbeslagname',
-    intro: 'Ik ga u een aantal korte vragen stellen om uw situatie goed in kaart te brengen. Dit helpt ons u direct de juiste juridische hulp te bieden.',
+    intro: 'Twee korte vragen, daarna belt een advocaat u terug.',
     questions: [
       {
         id: 'timing',
@@ -73,16 +63,6 @@ const TRIAGE_FLOWS = {
           'Deurwaarder (schulden)',
           'Andere instantie of onbekend'
         ]
-      },
-      {
-        id: 'document',
-        text: 'Heeft u een officieel inbeslagnamebesluit of procesverbaal ontvangen?',
-        options: ['Ja', 'Nee', 'Ik weet het niet']
-      },
-      {
-        id: 'criminal',
-        text: 'Is de inbeslagname gerelateerd aan een strafrechtelijk onderzoek?',
-        options: ['Ja', 'Nee', 'Ik weet het niet']
       },
     ]
   }
@@ -164,6 +144,15 @@ let state = {
   phase: 'idle'
 };
 
+// ===== FUNNEL-TRACKING =====
+// Stuurt een event naar Google Analytics als gtag actief is (vereist een echt
+// GA-meet-ID in de HTML i.p.v. G-XXXXXXXXXX). Zonder gtag gebeurt er niets.
+function track(event, params = {}) {
+  try {
+    if (typeof gtag === 'function') gtag('event', event, params);
+  } catch (err) { /* tracking mag de flow nooit breken */ }
+}
+
 // ===== DOM REFERENTIES =====
 const chatSection  = document.getElementById('chat-section');
 const chatBody     = document.getElementById('chat-body');
@@ -177,7 +166,7 @@ function scrollBottom() {
 }
 
 // ===== BOT BERICHT =====
-function addBotMsg(text, delayMs = 900) {
+function addBotMsg(text, delayMs = 350) {
   return new Promise(resolve => {
     const typing = document.createElement('div');
     typing.className = 'msg msg-bot typing-bubble';
@@ -235,6 +224,7 @@ function startTriage(topic) {
   state = { topic, questionIndex: 0, answers: {}, phase: 'triage' };
 
   const flow = TRIAGE_FLOWS[topic];
+  track('triage_start', { topic });
   chatBadge.textContent = flow.label;
   chatBadge.style.display = 'flex';
   chatProgress.style.display = 'flex';
@@ -248,9 +238,9 @@ function startTriage(topic) {
   }, 80);
 
   setTimeout(async () => {
-    await addBotMsg(flow.intro, 700);
+    await addBotMsg(flow.intro, 300);
     await askQuestion(0);
-  }, 500);
+  }, 250);
 }
 
 // ===== VRAAG STELLEN =====
@@ -265,6 +255,7 @@ async function askQuestion(index) {
   await addBotMsg(q.text);
   showOptions(q.options, async answer => {
     state.answers[q.id] = answer;
+    track('triage_answer', { topic: state.topic, step: index + 1, question: q.id });
     addUserMsg(answer);
     await askQuestion(index + 1);
   });
@@ -274,9 +265,10 @@ async function askQuestion(index) {
 async function showContactForm() {
   updateProgress(TRIAGE_FLOWS[state.topic].questions.length, TRIAGE_FLOWS[state.topic].questions.length);
   state.phase = 'contact';
+  track('triage_form_shown', { topic: state.topic });
 
-  await addBotMsg('Bedankt voor uw antwoorden! Op basis hiervan kunnen wij u direct koppelen aan een gespecialiseerde advocaat. Vul hieronder uw contactgegevens in om een gratis consult in te plannen.');
-  await new Promise(r => setTimeout(r, 300));
+  await addBotMsg('Bedankt! Laat uw naam en telefoonnummer achter, dan belt een advocaat u terug.');
+  await new Promise(r => setTimeout(r, 150));
 
   const wrap = document.createElement('div');
   wrap.className = 'msg msg-bot contact-form-wrap';
@@ -284,7 +276,7 @@ async function showContactForm() {
     <div class="msg-avatar">⚖</div>
     <div class="contact-form-bubble">
       <h3>Uw contactgegevens</h3>
-      <p>Wij nemen binnen 24 uur contact met u op voor een gratis intake.</p>
+      <p>Wij bellen u zo snel mogelijk terug, uiterlijk binnen 24 uur. De intake is gratis.</p>
       <form id="contact-form" class="form-row" novalidate>
         <!-- Honeypot: verborgen voor mensen, bots vullen dit in -->
         <input id="cf-honeypot" name="website" type="text" style="display:none;" tabindex="-1" autocomplete="off" />
@@ -297,8 +289,8 @@ async function showContactForm() {
           <input id="cf-phone" type="tel" placeholder="06 12 34 56 78" required />
         </div>
         <div class="form-field">
-          <label for="cf-email">E-mailadres *</label>
-          <input id="cf-email" type="email" placeholder="jan@voorbeeld.nl" required />
+          <label for="cf-email">E-mailadres <span style="font-weight:400;opacity:.7">(optioneel)</span></label>
+          <input id="cf-email" type="email" placeholder="jan@voorbeeld.nl" />
         </div>
         <div class="form-field">
           <label for="cf-time">Wanneer kunnen wij u het beste bereiken?</label>
@@ -338,7 +330,7 @@ async function handleContactSubmit(e) {
 
   // Validatie
   let valid = true;
-  ['cf-name', 'cf-phone', 'cf-email'].forEach(id => {
+  ['cf-name', 'cf-phone'].forEach(id => {
     const el = document.getElementById(id);
     if (!el.value.trim()) { el.style.borderColor = '#e63946'; valid = false; }
     else el.style.borderColor = '';
@@ -348,6 +340,8 @@ async function handleContactSubmit(e) {
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     document.getElementById('cf-email').style.borderColor = '#e63946';
     valid = false;
+  } else {
+    document.getElementById('cf-email').style.borderColor = '';
   }
 
   if (!valid) return;
@@ -366,15 +360,16 @@ async function handleContactSubmit(e) {
     onderwerp:   flow.label,
     naam:        name,
     telefoon:    phone,
-    email:       email,
+    email:       email || '(niet opgegeven)',
     contacttijd: time,
     antwoorden:  antwoorden
   };
 
   try {
     await emailjs.send(EMAIL_CONFIG.serviceId, EMAIL_CONFIG.templateId, templateParams);
+    track('triage_lead_submitted', { topic: state.topic });
     e.target.closest('.contact-form-wrap').remove();
-    addUserMsg(`${name} — ${phone} — ${email}`);
+    addUserMsg(email ? `${name} — ${phone} — ${email}` : `${name} — ${phone}`);
     setTimeout(() => showSuccess(name), 400);
   } catch (err) {
     console.error('EmailJS fout:', err);
@@ -383,7 +378,7 @@ async function handleContactSubmit(e) {
     // Fallback: toon succes ook zonder email (handig tijdens ontwikkeling)
     if (EMAIL_CONFIG.publicKey === 'UW_PUBLIC_KEY') {
       e.target.closest('.contact-form-wrap').remove();
-      addUserMsg(`${name} — ${phone} — ${email}`);
+      addUserMsg(email ? `${name} — ${phone} — ${email}` : `${name} — ${phone}`);
       setTimeout(() => showSuccess(name), 400);
     }
   }
@@ -402,7 +397,7 @@ async function showSuccess(name) {
     <div class="success-bubble">
       <div class="success-icon">✅</div>
       <h3>Aanvraag ontvangen, ${name.split(' ')[0]}!</h3>
-      <p>Wij nemen binnen <strong>24 uur</strong> contact met u op voor een gratis intake. In spoedsituaties kunt u ons altijd direct bereiken via <strong>06 82 75 67 89</strong>.</p>
+      <p>Wij bellen u zo snel mogelijk terug, uiterlijk binnen <strong>24 uur</strong>. In spoedsituaties kunt u ons altijd direct bereiken via <strong>06 82 75 67 89</strong>.</p>
     </div>
   `;
   chatBody.appendChild(el);
