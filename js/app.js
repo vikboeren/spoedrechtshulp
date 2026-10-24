@@ -24,7 +24,7 @@ const EMAIL_CONFIG = {
 
 const TRIAGE_FLOWS = {
   rijbewijs: {
-    label: '🪪 Rijbewijs Inbeslagname',
+    label: '🪪 Rijbewijs inbeslagname',
     intro: 'Twee korte vragen, daarna belt een advocaat u terug.',
     questions: [
       {
@@ -46,7 +46,7 @@ const TRIAGE_FLOWS = {
   },
 
   auto: {
-    label: '🚗 Auto Inbeslagname',
+    label: '🚗 Auto inbeslagname',
     intro: 'Twee korte vragen, daarna belt een advocaat u terug.',
     questions: [
       {
