@@ -396,20 +396,16 @@ document.querySelectorAll('.topic-card').forEach(card => {
   });
 });
 
-// ===== CONVERSIE: inline CTA's + sticky belbalk (mobiel) =====
+// ===== CONVERSIE: inline CTA's + sticky knop (mobiel) =====
 // Wacht op DOMContentLoaded: scrollToChat() wordt per pagina ná app.js gedefinieerd.
 document.addEventListener('DOMContentLoaded', function () {
   const article = document.querySelector('.spoke-article');
   if (!article || typeof scrollToChat !== 'function') return;
 
-  const PHONE_DISPLAY = '06 82 75 67 89';
-  const PHONE_TEL = 'tel:+31682756789';
   const isRijbewijs = scrollToChat.toString().includes("'rijbewijs'");
   const vraag = isRijbewijs
     ? 'Rijbewijs kwijt? Kijk gratis wat uw kansen zijn'
     : 'Kunt u uw auto terugkrijgen? Doe de gratis check';
-
-  const callClick = () => track('call_click', { page_path: location.pathname });
 
   function inlineCta() {
     const box = document.createElement('div');
@@ -417,13 +413,11 @@ document.addEventListener('DOMContentLoaded', function () {
     box.innerHTML =
       `<strong>${vraag}</strong>` +
       `<p>Twee korte vragen, daarna belt een advocaat u terug. Gratis en vrijblijvend.</p>` +
-      `<div class="inline-cta-btns"><button type="button">Start de check →</button>` +
-      `<a href="${PHONE_TEL}">Bel ${PHONE_DISPLAY}</a></div>`;
+      `<div class="inline-cta-btns"><button type="button">Start de check →</button></div>`;
     box.querySelector('button').addEventListener('click', () => {
       track('cta_click', { location: 'inline' });
       scrollToChat();
     });
-    box.querySelector('a').addEventListener('click', callClick);
     return box;
   }
 
@@ -436,8 +430,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Sticky balk onderaan op mobiel
   const bar = document.createElement('div');
   bar.className = 'sticky-cta';
-  bar.innerHTML = `<a href="${PHONE_TEL}">📞 Bel direct</a><button type="button">Gratis check →</button>`;
-  bar.querySelector('a').addEventListener('click', callClick);
+  bar.innerHTML = `<button type="button">Gratis check: 1 minuut →</button>`;
   bar.querySelector('button').addEventListener('click', () => {
     track('cta_click', { location: 'sticky' });
     scrollToChat();
