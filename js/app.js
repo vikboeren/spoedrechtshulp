@@ -203,7 +203,16 @@ function updateProgress(current, total) {
 }
 
 // ===== TRIAGE STARTEN =====
+let triageRun = 0;
+
 function startTriage(topic) {
+  // Loopt dit gesprek al (bijv. dubbelklik of tweede knop)? Dan alleen erheen scrollen.
+  if (state && state.topic === topic && (state.phase === 'triage' || state.phase === 'contact')
+      && chatSection.style.display === 'block') {
+    chatSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  const run = ++triageRun;
   state = { topic, questionIndex: 0, answers: {}, phase: 'triage' };
 
   const flow = TRIAGE_FLOWS[topic];
@@ -221,7 +230,9 @@ function startTriage(topic) {
   }, 80);
 
   setTimeout(async () => {
+    if (run !== triageRun) return;
     await addBotMsg(flow.intro, 300);
+    if (run !== triageRun) return;
     await askQuestion(0);
   }, 250);
 }
