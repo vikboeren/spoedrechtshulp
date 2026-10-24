@@ -395,3 +395,60 @@ document.querySelectorAll('.topic-card').forEach(card => {
     if (e.key === 'Enter' || e.key === ' ') startTriage(card.id.replace('card-', ''));
   });
 });
+
+// ===== CONVERSIE: inline CTA's + sticky belbalk (mobiel) =====
+// Wacht op DOMContentLoaded: scrollToChat() wordt per pagina ná app.js gedefinieerd.
+document.addEventListener('DOMContentLoaded', function () {
+  const article = document.querySelector('.spoke-article');
+  if (!article || typeof scrollToChat !== 'function') return;
+
+  const PHONE_DISPLAY = '06 82 75 67 89';
+  const PHONE_TEL = 'tel:+31682756789';
+  const isRijbewijs = scrollToChat.toString().includes("'rijbewijs'");
+  const vraag = isRijbewijs
+    ? 'Rijbewijs kwijt? Kijk gratis wat uw kansen zijn'
+    : 'Kunt u uw auto terugkrijgen? Doe de gratis check';
+
+  const callClick = () => track('call_click', { page_path: location.pathname });
+
+  function inlineCta() {
+    const box = document.createElement('div');
+    box.className = 'inline-cta';
+    box.innerHTML =
+      `<strong>${vraag}</strong>` +
+      `<p>Twee korte vragen, daarna belt een advocaat u terug. Gratis en vrijblijvend.</p>` +
+      `<div class="inline-cta-btns"><button type="button">Start de check →</button>` +
+      `<a href="${PHONE_TEL}">Bel ${PHONE_DISPLAY}</a></div>`;
+    box.querySelector('button').addEventListener('click', () => {
+      track('cta_click', { location: 'inline' });
+      scrollToChat();
+    });
+    box.querySelector('a').addEventListener('click', callClick);
+    return box;
+  }
+
+  // Na het tweede inhoudelijke blok, en vlak voor de FAQ
+  const h2s = article.querySelectorAll('h2');
+  if (h2s[2]) article.insertBefore(inlineCta(), h2s[2]);
+  const faq = [...h2s].find(h => /veelgestelde/i.test(h.textContent));
+  if (faq && faq !== h2s[2]) article.insertBefore(inlineCta(), faq);
+
+  // Sticky balk onderaan op mobiel
+  const bar = document.createElement('div');
+  bar.className = 'sticky-cta';
+  bar.innerHTML = `<a href="${PHONE_TEL}">📞 Bel direct</a><button type="button">Gratis check →</button>`;
+  bar.querySelector('a').addEventListener('click', callClick);
+  bar.querySelector('button').addEventListener('click', () => {
+    track('cta_click', { location: 'sticky' });
+    scrollToChat();
+  });
+  document.body.appendChild(bar);
+  document.body.classList.add('has-sticky-cta');
+
+  // Verbergen zolang de chat in beeld is
+  const chat = document.getElementById('chat-section');
+  if (chat && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => bar.classList.toggle('hidden', e.isIntersecting))
+      .observe(chat);
+  }
+});
