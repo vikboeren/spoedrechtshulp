@@ -260,6 +260,7 @@ async function showContactForm() {
     <div class="contact-form-bubble">
       <h3>Uw contactgegevens</h3>
       <p>Wij bellen u zo snel mogelijk terug, uiterlijk binnen 24 uur. De intake is gratis.</p>
+      <div class="review-badge-wrap review-badge-wrap--form">${reviewBadgeHtml()}</div>
       <form id="contact-form" class="form-row" novalidate>
         <!-- Honeypot: verborgen voor mensen, bots vullen dit in -->
         <input id="cf-honeypot" name="website" type="text" style="display:none;" tabindex="-1" autocomplete="off" />
@@ -443,5 +444,44 @@ document.addEventListener('DOMContentLoaded', function () {
   if (chat && 'IntersectionObserver' in window) {
     new IntersectionObserver(([e]) => bar.classList.toggle('hidden', e.isIntersecting))
       .observe(chat);
+  }
+});
+
+// ===== REVIEWS (echte Google-reviews; bijwerken als er nieuwe bijkomen) =====
+const GOOGLE_REVIEWS = {
+  score: '5,0',
+  count: 6,
+  url: 'https://www.google.com/maps/search/?api=1&query=Spoedrechtshulp.nl',
+  highlights: [
+    { name: 'Corinne S.',    text: 'Zeer ter zake kundig. Ik ben zeer goed geholpen.' },
+    { name: 'Anne Fleur D.', text: 'Snel en kundig geholpen. Zou het iedereen aanraden.' },
+    { name: 'Julie M.',      text: 'Snel geholpen. Erg tevreden over de dienstverlening!' }
+  ]
+};
+
+function reviewBadgeHtml() {
+  return `<a class="review-badge" href="${GOOGLE_REVIEWS.url}" target="_blank" rel="noopener">` +
+    `<span class="review-badge-stars">★★★★★</span> ${GOOGLE_REVIEWS.score} uit ${GOOGLE_REVIEWS.count} Google-reviews</a>`;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Badge onder de hero-knop op artikelpagina's
+  const heroCta = document.querySelector('.spoke-cta-bar');
+  if (heroCta) heroCta.insertAdjacentHTML('afterend', `<div class="review-badge-wrap">${reviewBadgeHtml()}</div>`);
+
+  // Reviewblok in het artikel, vlak voor de FAQ (en dus vóór de tweede CTA)
+  const article = document.querySelector('.spoke-article');
+  if (article) {
+    const faq = [...article.querySelectorAll('h2')].find(h => /veelgestelde/i.test(h.textContent));
+    const anchor = faq && faq.previousElementSibling && faq.previousElementSibling.classList.contains('inline-cta')
+      ? faq.previousElementSibling : faq;
+    if (anchor) {
+      const box = document.createElement('div');
+      box.className = 'article-reviews';
+      box.innerHTML = `<div class="article-reviews-head">${reviewBadgeHtml()}</div>` +
+        GOOGLE_REVIEWS.highlights.map(r =>
+          `<blockquote class="article-review"><p>"${r.text}"</p><cite>${r.name}</cite></blockquote>`).join('');
+      article.insertBefore(box, anchor);
+    }
   }
 });

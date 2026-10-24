@@ -1230,3 +1230,24 @@ body {
   body.has-sticky-cta { padding-bottom: 72px; }
   body.has-sticky-cta .whatsapp-btn { bottom: 86px; right: 16px; }
 }
+
+/* ===== GOOGLE-REVIEWS ===== */
+.review-badge-wrap { margin-top: 14px; }
+.review-badge {
+  display: inline-flex; align-items: center; gap: 6px; font-size: .88rem;
+  color: rgba(255,255,255,.8); text-decoration: none;
+}
+.review-badge:hover { text-decoration: underline; }
+.review-badge-stars { color: #F5C518; letter-spacing: 1px; }
+.review-badge-wrap--form { margin: -4px 0 14px; }
+.review-badge-wrap--form .review-badge, .article-reviews .review-badge { color: var(--charcoal); }
+.reviews-score a { color: var(--crimson); font-weight: 600; }
+
+.article-reviews {
+  margin: 32px 0; padding: 20px 22px; border-radius: 12px;
+  background: var(--warm-bg); border: 1px solid var(--warm-border);
+}
+.article-reviews-head { margin-bottom: 10px; font-weight: 600; }
+.spoke-article .article-review { margin: 10px 0 0; padding: 0; border: 0; }
+.spoke-article .article-review p { margin: 0; font-style: italic; color: var(--charcoal); }
+.spoke-article .article-review cite { font-size: .82rem; color: var(--mid); font-style: normal; }
