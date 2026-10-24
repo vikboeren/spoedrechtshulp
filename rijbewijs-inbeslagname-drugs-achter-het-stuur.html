@@ -112,7 +112,7 @@
       <h1 class="spoke-title">Rijbewijs ingevorderd na <em>drugs</em> achter het stuur</h1>
       <p class="spoke-sub">Bent u aangehouden met drugs in uw bloed en is uw rijbewijs ingevorderd? Ontdek welke regels gelden en wat u snel kunt doen.</p>
       <div class="spoke-cta-bar">
-        <a class="spoke-cta-primary" href="rijbewijs-inbeslagname.html">Start uw aanvraag direct <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <button class="spoke-cta-primary" onclick="scrollToChat()">Gratis check: 1 minuut <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
       </div>
     </div>
   </section>
@@ -143,6 +143,27 @@
     </article>
   </div>
 
+  <!-- CHAT SECTION -->
+  <section class="chat-section" id="chat-section" style="display:none;">
+    <div class="chat-wrapper">
+      <div class="chat-header" id="chat-header">
+        <div class="chat-header-left">
+          <div class="chat-avatar">SR</div>
+          <div>
+            <div class="chat-name">SpoedRechtshulp Assistent</div>
+            <div class="chat-status"><span class="status-dot"></span> Online — reageert direct</div>
+          </div>
+        </div>
+        <div class="chat-topic-badge" id="chat-topic-badge" style="display:none;"></div>
+      </div>
+      <div class="chat-body" id="chat-body"></div>
+      <div class="chat-progress" id="chat-progress" style="display:none;">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <span class="progress-label" id="progress-label">Stap 1 van 4</span>
+      </div>
+    </div>
+  </section>
+
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-logo">
@@ -164,5 +185,6 @@
   </a>
 
   <script src="js/app.js"></script>
+  <script>function scrollToChat() { startTriage('rijbewijs'); }</script>
 </body>
 </html>
