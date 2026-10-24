@@ -107,24 +107,7 @@ document.addEventListener('click', function(e) {
   }
 });
 
-// ===== COOKIE CONSENT =====
-(function () {
-  const consent = localStorage.getItem('cookie-consent');
-  const banner  = document.getElementById('cookie-banner');
-  if (consent && banner) banner.classList.add('hidden');
-})();
-
-function acceptCookies() {
-  localStorage.setItem('cookie-consent', 'accepted');
-  const b = document.getElementById('cookie-banner');
-  if (b) b.classList.add('hidden');
-}
-
-function declineCookies() {
-  localStorage.setItem('cookie-consent', 'declined');
-  const b = document.getElementById('cookie-banner');
-  if (b) b.classList.add('hidden');
-}
+// Cookie consent + Google Analytics: zie js/analytics.js
 
 // ===== INITIALISATIE =====
 // Defensief: als het externe EmailJS-script niet laadt, mag dat de rest van
